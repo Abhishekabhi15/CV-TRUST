@@ -1,0 +1,555 @@
+// CV-TRUST Dashboard JavaScript
+// Dashboard functionality and event handlers
+
+const dashboardMarkup = `
+    <body>
+
+        <!-- =========================
+             NAVBAR
+        ========================== -->
+
+        <nav class="navbar navbar-dark bg-dark px-4">
+
+            <span class="navbar-brand fw-bold">
+                CV-TRUST
+            </span>
+
+            <div class="text-white">
+
+                Analyst
+
+                <a
+                    href="index.html"
+                    class="btn btn-outline-light btn-sm ms-3">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </nav>
+
+
+        <!-- =========================
+             PAGE
+        ========================== -->
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+
+                <!-- =========================
+                     SIDEBAR
+                ========================== -->
+
+                <div class="col-md-3 col-lg-2 sidebar">
+
+                    <h6 class="sidebar-heading">
+                        ASSURANCE
+                    </h6>
+
+
+                    <a
+                        href="dashboard.html"
+                        class="sidebar-link active">
+
+                        Dashboard
+
+                    </a>
+
+
+                    <a
+                        href="data.html"
+                        class="sidebar-link">
+
+                        Data Assurance
+
+                    </a>
+
+
+                    <a
+                        href="vision.html"
+                        class="sidebar-link">
+
+                        Vision Detection
+
+                    </a>
+
+
+                    <a
+                        href="model.html"
+                        class="sidebar-link">
+
+                        Model Assurance
+
+                    </a>
+
+
+                    <a
+                        href="inference.html"
+                        class="sidebar-link">
+
+                        Inference Provenance
+
+                    </a>
+
+
+                    <a
+                        href="shift.html"
+                        class="sidebar-link">
+
+                        Distribution Shift
+
+                    </a>
+
+
+                    <h6 class="sidebar-heading mt-4">
+                        REPORTING
+                    </h6>
+
+
+                    <a
+                        href="report.html"
+                        class="sidebar-link">
+
+                        Assurance Reports
+
+                    </a>
+
+
+                    <a
+                        href="logs.html"
+                        class="sidebar-link">
+
+                        Audit Logs
+
+                    </a>
+
+                </div>
+
+
+                <!-- =========================
+                     MAIN CONTENT
+                ========================== -->
+
+                <div class="col-md-9 col-lg-10 main-content">
+
+
+                    <!-- HEADER -->
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <div>
+
+                            <h2 class="fw-bold">
+                                CV-TRUST Dashboard
+                            </h2>
+
+                            <p class="text-muted">
+                                Computer Vision Integrity Overview
+                            </p>
+
+                        </div>
+
+
+                        <span class="badge bg-success p-2">
+                            System Healthy
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         SUMMARY CARDS
+                    ========================== -->
+
+                    <div class="row g-4">
+
+
+                        <!-- RISK -->
+
+                        <div class="col-md-6 col-xl-3">
+
+                            <div class="dashboard-card">
+
+                                <p class="text-muted">
+                                    Overall Risk
+                                </p>
+
+                                <h2>
+                                    24%
+                                </h2>
+
+                                <span class="badge bg-warning text-dark">
+                                    REVIEW
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ASSETS -->
+
+                        <div class="col-md-6 col-xl-3">
+
+                            <div class="dashboard-card">
+
+                                <p class="text-muted">
+                                    Total Assets
+                                </p>
+
+                                <h2>
+                                    18
+                                </h2>
+
+                                <span class="text-muted">
+                                    Datasets + Models
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- FINDINGS -->
+
+                        <div class="col-md-6 col-xl-3">
+
+                            <div class="dashboard-card">
+
+                                <p class="text-muted">
+                                    Active Findings
+                                </p>
+
+                                <h2>
+                                    5
+                                </h2>
+
+                                <span class="badge bg-danger">
+                                    ATTENTION
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONFIDENCE -->
+
+                        <div class="col-md-6 col-xl-3">
+
+                            <div class="dashboard-card">
+
+                                <p class="text-muted">
+                                    Assurance Confidence
+                                </p>
+
+                                <h2>
+                                    86%
+                                </h2>
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         SYSTEM INTEGRITY
+                    ========================== -->
+
+                    <div class="dashboard-section mt-4">
+
+                        <h5 class="fw-bold">
+                            System Integrity
+                        </h5>
+
+                        <p class="text-muted">
+                            Current assurance confidence across the CV pipeline.
+                        </p>
+
+
+                        <h1 class="text-success">
+                            86%
+                        </h1>
+
+
+                        <div class="progress">
+
+                            <div
+                                class="progress-bar bg-success"
+                                style="width: 86%;">
+
+                                86%
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         RECENT FINDINGS
+                    ========================== -->
+
+                    <div class="dashboard-section mt-4">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+
+                                <h5 class="fw-bold">
+                                    Recent Findings
+                                </h5>
+
+                                <p class="text-muted">
+                                    Latest integrity findings.
+                                </p>
+
+                            </div>
+
+
+                            <a
+                                href="report.html"
+                                class="btn btn-outline-primary btn-sm">
+
+                                View Report
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="table-responsive">
+
+                            <table class="table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Finding</th>
+
+                                        <th>Asset</th>
+
+                                        <th>Severity</th>
+
+                                        <th>Status</th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    <tr>
+
+                                        <td>
+                                            Dataset Anomaly
+                                        </td>
+
+                                        <td>
+                                            Dataset_01
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-warning text-dark">
+                                                MEDIUM
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-warning text-dark">
+                                                REVIEW
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td>
+                                            Model Verification
+                                        </td>
+
+                                        <td>
+                                            YOLO Model
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-success">
+                                                LOW
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-success">
+                                                VERIFIED
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td>
+                                            Inference Modification
+                                        </td>
+
+                                        <td>
+                                            Inference_004
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-danger">
+                                                HIGH
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-danger">
+                                                SUSPICIOUS
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         ASSURANCE PIPELINE
+                    ========================== -->
+
+                    <div class="dashboard-section mt-4">
+
+                        <h5 class="fw-bold">
+                            Assurance Pipeline
+                        </h5>
+
+                        <p class="text-muted">
+                            Current status of the CV-TRUST assurance layers.
+                        </p>
+
+
+                        <div class="row g-3 mt-2">
+
+
+                            <div class="col-md-3">
+
+                                <div class="pipeline-card">
+
+                                    <h6>
+                                        Data
+                                    </h6>
+
+                                    <span class="badge bg-success">
+                                        VERIFIED
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <div class="pipeline-card">
+
+                                    <h6>
+                                        Model
+                                    </h6>
+
+                                    <span class="badge bg-success">
+                                        VERIFIED
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <div class="pipeline-card">
+
+                                    <h6>
+                                        Inference
+                                    </h6>
+
+                                    <span class="badge bg-warning text-dark">
+                                        REVIEW
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <div class="pipeline-card">
+
+                                    <h6>
+                                        Shift
+                                    </h6>
+
+                                    <span class="badge bg-success">
+                                        NORMAL
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </body>
+
+</html>
+

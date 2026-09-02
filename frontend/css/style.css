@@ -1,0 +1,357 @@
+/* ================================
+   CV-TRUST GLOBAL STYLES
+================================ */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f7fb;
+    color: #1f2937;
+    margin: 0;
+}
+
+
+/* ================================
+   LOGIN PAGE
+================================ */
+
+.login-page {
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e3a8a
+    );
+}
+
+
+.login-card {
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+
+.brand-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: auto;
+    margin-bottom: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #2563eb;
+    color: white;
+
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+.brand-title {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+.form-control {
+    padding: 12px;
+    border-radius: 10px;
+}
+
+
+.btn {
+    border-radius: 10px;
+}
+
+
+/* ================================
+   DASHBOARD SIDEBAR
+================================ */
+
+.sidebar {
+    min-height: calc(100vh - 56px);
+    background-color: #111827;
+    padding: 25px 15px;
+}
+
+
+.sidebar-heading {
+    color: #9ca3af;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+
+.sidebar-link {
+    display: block;
+    color: #d1d5db;
+    text-decoration: none;
+
+    padding: 11px 12px;
+    margin-bottom: 5px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+}
+
+
+.sidebar-link:hover {
+    background-color: #1f2937;
+    color: white;
+}
+
+
+.sidebar-link.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+
+/* ================================
+   MAIN DASHBOARD CONTENT
+================================ */
+
+.main-content {
+    padding: 30px;
+}
+
+
+/* ================================
+   DASHBOARD SUMMARY CARDS
+================================ */
+
+.dashboard-card {
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    min-height: 130px;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.06);
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+
+.dashboard-card p {
+    margin-bottom: 5px;
+}
+
+
+.dashboard-card h2 {
+    font-weight: bold;
+    margin: 5px 0 10px;
+}
+
+
+/* ================================
+   DASHBOARD SECTIONS
+================================ */
+
+.dashboard-section {
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+
+.dashboard-section h5 {
+    margin-bottom: 6px;
+}
+
+
+/* ================================
+   SYSTEM INTEGRITY PROGRESS
+================================ */
+
+.progress {
+    height: 14px;
+
+    border-radius: 10px;
+
+    background-color: #e5e7eb;
+}
+
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+
+/* ================================
+   TABLE
+================================ */
+
+.table {
+    margin-top: 20px;
+
+    vertical-align: middle;
+}
+
+
+.table th {
+    color: #6b7280;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.table td {
+    font-size: 14px;
+}
+
+
+.table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+
+/* ================================
+   PIPELINE CARDS
+================================ */
+
+.pipeline-card {
+    background-color: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    padding: 18px;
+
+    height: 100%;
+
+    transition: 0.2s ease;
+}
+
+
+.pipeline-card:hover {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+
+.pipeline-card h6 {
+    font-weight: 600;
+
+    margin-bottom: 12px;
+}
+
+
+/* ================================
+   BOOTSTRAP BADGE IMPROVEMENT
+================================ */
+
+.badge {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.2px;
+}
+
+
+/* ================================
+   NAVBAR
+================================ */
+
+.navbar {
+    min-height: 56px;
+}
+
+
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        min-height: auto;
+
+        padding: 15px;
+    }
+
+
+    .main-content {
+        padding: 20px;
+    }
+
+
+    .dashboard-section {
+        padding: 20px;
+    }
+
+}
+/* ================================
+   MODEL ASSURANCE
+================================ */
+
+.verification-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+}
+
+.verification-card strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-item span {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.info-item strong {
+    font-size: 18px;
+}
