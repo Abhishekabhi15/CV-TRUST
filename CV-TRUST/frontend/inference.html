@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CV-TRUST | Inference Provenance</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- TOP NAVBAR -->
+
+    <nav class="navbar navbar-dark bg-dark px-4">
+
+        <span class="navbar-brand fw-bold">
+            CV-TRUST
+        </span>
+
+
+        <div class="text-white">
+
+            Analyst
+
+            <a
+                href="index.html"
+                class="btn btn-outline-light btn-sm ms-3">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- MAIN LAYOUT -->
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+
+            <!-- SIDEBAR -->
+
+            <div class="col-md-3 col-lg-2 sidebar">
+
+
+                <h6 class="sidebar-heading">
+                    ASSURANCE
+                </h6>
+
+
+                <a
+                    href="dashboard.html"
+                    class="sidebar-link">
+
+                    Dashboard
+
+                </a>
+
+
+                <a
+                    href="data.html"
+                    class="sidebar-link">
+
+                    Data Assurance
+
+                </a>
+
+
+                <a
+                    href="vision.html"
+                    class="sidebar-link">
+
+                    Vision Detection
+
+                </a>
+
+
+                <a
+                    href="model.html"
+                    class="sidebar-link">
+
+                    Model Assurance
+
+                </a>
+
+
+                <a
+                    href="inference.html"
+                    class="sidebar-link active">
+
+                    Inference Provenance
+
+                </a>
+
+
+                <a
+                    href="shift.html"
+                    class="sidebar-link">
+
+                    Distribution Shift
+
+                </a>
+
+
+
+                <h6 class="sidebar-heading mt-4">
+                    REPORTING
+                </h6>
+
+
+                <a
+                    href="reports.html"
+                    class="sidebar-link">
+
+                    Assurance Reports
+
+                </a>
+
+
+                <a
+                    href="logs.html"
+                    class="sidebar-link">
+
+                    Audit Logs
+
+                </a>
+
+
+            </div>
+
+
+
+            <!-- MAIN CONTENT -->
+
+            <div class="col-md-9 col-lg-10 main-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+                    <div>
+
+                        <h2 class="fw-bold">
+                            Inference Provenance
+                        </h2>
+
+                        <p class="text-muted">
+                            Traceability and integrity verification of model inference
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="inferenceStatus"
+                        class="badge bg-success p-2">
+
+                        VERIFIED
+
+                    </span>
+
+
+                </div>
+
+
+
+                <!-- INFERENCE INPUT -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <h5 class="fw-bold">
+                        Inference Input
+                    </h5>
+
+
+                    <p class="text-muted">
+                        Provide an inference record for provenance and integrity analysis.
+                    </p>
+
+
+                    <div class="row g-3">
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Inference ID
+                            </label>
+
+                            <input
+                                type="text"
+                                id="inferenceId"
+                                class="form-control"
+                                value="INF-2026-004">
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Model
+                            </label>
+
+                            <select
+                                id="modelSelect"
+                                class="form-select">
+
+                                <option>
+                                    YOLOv8
+                                </option>
+
+                                <option>
+                                    YOLOv5
+                                </option>
+
+                                <option>
+                                    ResNet-50
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Input Image
+                            </label>
+
+                            <input
+                                type="file"
+                                id="inferenceImage"
+                                class="form-control"
+                                accept="image/*">
+
+                            <small
+                                id="imageInfo"
+                                class="text-muted">
+
+                                No image selected.
+
+                            </small>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Inference Timestamp
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="2026-09-02 14:25:31"
+                                readonly>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <button
+                        id="verifyInferenceBtn"
+                        class="btn btn-primary mt-4">
+
+                        Verify Inference
+
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- INFERENCE SUMMARY -->
+
+                <div class="row g-4 mb-4">
+
+
+                    <div class="col-md-3">
+
+                        <div class="dashboard-section h-100">
+
+                            <span class="text-muted">
+                                Inference ID
+                            </span>
+
+                            <h4 class="fw-bold mt-2">
+                                INF-2026-004
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <div class="dashboard-section h-100">
+
+                            <span class="text-muted">
+                                Model
+                            </span>
+
+                            <h4 class="fw-bold mt-2">
+                                YOLOv8
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <div class="dashboard-section h-100">
+
+                            <span class="text-muted">
+                                Prediction
+                            </span>
+
+                            <h4 class="fw-bold mt-2">
+                                Person
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <div class="dashboard-section h-100">
+
+                            <span class="text-muted">
+                                Confidence
+                            </span>
+
+                            <h4 class="fw-bold mt-2">
+                                94%
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- PROVENANCE STATUS -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Provenance Status
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Integrity status of the inference execution chain.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="badge bg-success">
+
+                            VERIFIED
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <div class="row g-3">
+
+
+                        <!-- MODEL IDENTITY -->
+
+                        <div class="col-md-6">
+
+                            <div class="verification-card">
+
+
+                                <div>
+
+                                    <strong>
+                                        Model Identity
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Inference executed using the registered YOLOv8 model.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- INPUT INTEGRITY -->
+
+                        <div class="col-md-6">
+
+                            <div class="verification-card">
+
+
+                                <div>
+
+                                    <strong>
+                                        Input Integrity
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Input image matches the recorded inference input.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- EXECUTION TRACE -->
+
+                        <div class="col-md-6">
+
+                            <div class="verification-card">
+
+
+                                <div>
+
+                                    <strong>
+                                        Execution Trace
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Inference execution sequence is complete and consistent.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- OUTPUT INTEGRITY -->
+
+                        <div class="col-md-6">
+
+                            <div class="verification-card">
+
+
+                                <div>
+
+                                    <strong>
+                                        Output Integrity
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Recorded prediction and confidence are consistent.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- INFERENCE DETAILS -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <h5 class="fw-bold">
+                        Inference Details
+                    </h5>
+
+
+                    <p class="text-muted">
+                        Recorded information associated with the selected inference.
+                    </p>
+
+
+                    <div class="row g-4 mt-1">
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Inference ID
+                                </span>
+
+                                <strong>
+                                    INF-2026-004
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Model Version
+                                </span>
+
+                                <strong>
+                                    v8.0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Framework
+                                </span>
+
+                                <strong>
+                                    Ultralytics
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Prediction
+                                </span>
+
+                                <strong>
+                                    Person
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Confidence
+                                </span>
+
+                                <strong>
+                                    94%
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Execution Status
+                                </span>
+
+                                <strong>
+                                    Completed
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- PROVENANCE CHAIN -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <h5 class="fw-bold">
+                        Provenance Chain
+                    </h5>
+
+
+                    <p class="text-muted">
+                        Trace of the inference from input to final prediction.
+                    </p>
+
+
+                    <div class="table-responsive mt-3">
+
+
+                        <table class="table align-middle">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Step
+                                    </th>
+
+                                    <th>
+                                        Process
+                                    </th>
+
+                                    <th>
+                                        Description
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                <tr>
+
+                                    <td>
+                                        1
+                                    </td>
+
+                                    <td>
+                                        Input Received
+                                    </td>
+
+                                    <td>
+                                        Image input received for inference processing.
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        2
+                                    </td>
+
+                                    <td>
+                                        Model Loaded
+                                    </td>
+
+                                    <td>
+                                        Registered YOLOv8 model loaded successfully.
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        3
+                                    </td>
+
+                                    <td>
+                                        Inference Executed
+                                    </td>
+
+                                    <td>
+                                        Object detection inference completed successfully.
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        4
+                                    </td>
+
+                                    <td>
+                                        Output Recorded
+                                    </td>
+
+                                    <td>
+                                        Prediction and confidence value recorded.
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- INFERENCE HISTORY -->
+
+                <div class="dashboard-section">
+
+
+                    <h5 class="fw-bold">
+                        Inference History
+                    </h5>
+
+
+                    <p class="text-muted">
+                        Recent inference provenance records.
+                    </p>
+
+
+                    <div class="table-responsive mt-3">
+
+
+                        <table class="table align-middle">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Inference ID
+                                    </th>
+
+                                    <th>
+                                        Model
+                                    </th>
+
+                                    <th>
+                                        Prediction
+                                    </th>
+
+                                    <th>
+                                        Confidence
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                <tr>
+
+                                    <td>
+                                        INF-2026-004
+                                    </td>
+
+                                    <td>
+                                        YOLOv8
+                                    </td>
+
+                                    <td>
+                                        Person
+                                    </td>
+
+                                    <td>
+                                        94%
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        INF-2026-003
+                                    </td>
+
+                                    <td>
+                                        YOLOv8
+                                    </td>
+
+                                    <td>
+                                        Vehicle
+                                    </td>
+
+                                    <td>
+                                        89%
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        INF-2026-002
+                                    </td>
+
+                                    <td>
+                                        YOLOv8
+                                    </td>
+
+                                    <td>
+                                        Person
+                                    </td>
+
+                                    <td>
+                                        91%
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-warning text-dark">
+                                            REVIEW
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        INF-2026-001
+                                    </td>
+
+                                    <td>
+                                        YOLOv8
+                                    </td>
+
+                                    <td>
+                                        Vehicle
+                                    </td>
+
+                                    <td>
+                                        87%
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-danger">
+                                            SUSPICIOUS
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="js/inference.js"></script>
+
+
+</body>
+
+</html>

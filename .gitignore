@@ -1,0 +1,25 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Runtime uploads
+backend/uploads/*
+python-service/uploads/*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+python-service/bus.jpg
+test_format.js

@@ -1,0 +1,16 @@
+/**
+ * Main API router aggregator.
+ */
+const router = require('express').Router();
+
+router.use(require('./health.routes'));
+router.use(require('./dataset.routes'));
+router.use(require('./detect.routes'));
+router.use(require('./model.routes'));
+router.use(require('./inference.routes'));
+router.use(require('./shift.routes'));
+router.use(require('./findings.routes'));
+router.use(require('./report.routes'));
+router.use(require('./audit.routes'));
+
+module.exports = router;

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CV-TRUST | Model Assurance</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- TOP NAVBAR -->
+
+    <nav class="navbar navbar-dark bg-dark px-4">
+
+        <span class="navbar-brand fw-bold">
+            CV-TRUST
+        </span>
+
+
+        <div class="text-white">
+
+            Analyst
+
+            <a
+                href="index.html"
+                class="btn btn-outline-light btn-sm ms-3">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- MAIN LAYOUT -->
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+
+            <!-- SIDEBAR -->
+
+            <div class="col-md-3 col-lg-2 sidebar">
+
+
+                <h6 class="sidebar-heading">
+                    ASSURANCE
+                </h6>
+
+
+                <a
+                    href="dashboard.html"
+                    class="sidebar-link">
+
+                    Dashboard
+
+                </a>
+
+
+                <a
+                    href="data.html"
+                    class="sidebar-link">
+
+                    Data Assurance
+
+                </a>
+
+
+                <a
+                    href="vision.html"
+                    class="sidebar-link">
+
+                    Vision Detection
+
+                </a>
+
+
+                <a
+                    href="model.html"
+                    class="sidebar-link active">
+
+                    Model Assurance
+
+                </a>
+
+
+                <a
+                    href="inference.html"
+                    class="sidebar-link">
+
+                    Inference Provenance
+
+                </a>
+
+
+                <a
+                    href="shift.html"
+                    class="sidebar-link">
+
+                    Distribution Shift
+
+                </a>
+
+
+
+                <h6 class="sidebar-heading mt-4">
+                    REPORTING
+                </h6>
+
+
+                <a
+                    href="reports.html"
+                    class="sidebar-link">
+
+                    Assurance Reports
+
+                </a>
+
+
+                <a
+                    href="logs.html"
+                    class="sidebar-link">
+
+                    Audit Logs
+
+                </a>
+
+
+            </div>
+
+
+
+            <!-- MAIN CONTENT -->
+
+            <div class="col-md-9 col-lg-10 main-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+                    <div>
+
+                        <h2 class="fw-bold">
+                            Model Assurance
+                        </h2>
+
+                        <p class="text-muted">
+                            Model verification and integrity analysis
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="modelStatus"
+                        class="badge bg-success p-2">
+
+                        VERIFIED
+
+                    </span>
+
+
+                </div>
+
+
+
+                <!-- MODEL UPLOAD -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <h5 class="fw-bold">
+                        Model Upload
+                    </h5>
+
+
+                    <p class="text-muted">
+                        Upload a trained computer vision model for integrity verification.
+                    </p>
+
+
+                    <input
+                        type="file"
+                        id="modelInput"
+                        class="form-control">
+
+
+                    <div
+                        id="modelFileInfo"
+                        class="text-muted mt-2">
+
+                        No model selected.
+
+                    </div>
+
+
+                    <button
+                        id="verifyModelBtn"
+                        class="btn btn-primary mt-3"
+                        disabled>
+
+                        Verify Model
+
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- MODEL INFORMATION -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <h5 class="fw-bold">
+                        Model Information
+                    </h5>
+
+
+                    <div class="row g-4 mt-1">
+
+
+                        <div class="col-md-3">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Model Name
+                                </span>
+
+                                <strong>
+                                    YOLOv8
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Version
+                                </span>
+
+                                <strong>
+                                    v8.0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Framework
+                                </span>
+
+                                <strong>
+                                    Ultralytics
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <div class="info-item">
+
+                                <span>
+                                    Model Size
+                                </span>
+
+                                <strong id="modelSize">
+                                    6.2 MB
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- INTEGRITY SCORE -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Model Integrity
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Overall confidence in model integrity.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            id="integrityScore"
+                            class="display-6 text-success">
+
+                            94%
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="progress mt-4"
+                        style="height: 14px;">
+
+                        <div
+                            id="integrityBar"
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            style="width: 94%;">
+
+                            94%
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- VERIFICATION CHECKS -->
+
+                <div class="dashboard-section mb-4">
+
+
+                    <h5 class="fw-bold">
+                        Integrity Verification
+                    </h5>
+
+
+                    <div class="row g-3 mt-2">
+
+
+                        <div class="col-md-6">
+
+
+                            <div class="verification-card">
+
+                                <div>
+
+                                    <strong>
+                                        Hash Verification
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Model hash matches the registered version.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+
+                            <div class="verification-card">
+
+                                <div>
+
+                                    <strong>
+                                        Architecture Check
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Model architecture matches expected configuration.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+
+                            <div class="verification-card">
+
+                                <div>
+
+                                    <strong>
+                                        Weight Integrity
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Model weights passed integrity validation.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-success">
+                                    VERIFIED
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+
+                            <div class="verification-card">
+
+                                <div>
+
+                                    <strong>
+                                        Configuration
+                                    </strong>
+
+                                    <p class="text-muted mb-0">
+                                        Configuration requires analyst review.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="badge bg-warning text-dark">
+                                    REVIEW
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- VERIFICATION FINDINGS -->
+
+                <div class="dashboard-section">
+
+
+                    <h5 class="fw-bold">
+                        Verification Findings
+                    </h5>
+
+
+                    <p class="text-muted">
+                        Latest model integrity verification results.
+                    </p>
+
+
+                    <div class="table-responsive">
+
+
+                        <table class="table align-middle">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Verification
+                                    </th>
+
+                                    <th>
+                                        Description
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                <tr>
+
+                                    <td>
+                                        Model Hash
+                                    </td>
+
+                                    <td>
+                                        Cryptographic hash verification
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        Model Architecture
+                                    </td>
+
+                                    <td>
+                                        Architecture consistency check
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        Model Weights
+                                    </td>
+
+                                    <td>
+                                        Weight integrity validation
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            VERIFIED
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        Configuration
+                                    </td>
+
+                                    <td>
+                                        Configuration consistency check
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-warning text-dark">
+                                            REVIEW
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <script src="js/model.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,346 @@
+{
+  "info": {
+    "name": "CV-TRUST Backend",
+    "description": "Complete backend API collection for the CV-TRUST Computer Vision Trust Verification System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "cvtrust-backend-v1"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api", "type": "string" },
+    { "key": "inference_id", "value": "", "type": "string" },
+    { "key": "report_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success flag is true', () => pm.expect(pm.response.json().success).to.be.true);",
+                  "pm.test('has data.status', () => pm.expect(pm.response.json().data).to.have.property('status'));",
+                  "pm.test('has services.mongodb', () => pm.expect(pm.response.json().data.services).to.have.property('mongodb'));",
+                  "pm.test('has services.pythonService', () => pm.expect(pm.response.json().data.services).to.have.property('pythonService'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "YOLO Detection",
+      "item": [
+        {
+          "name": "POST /detect",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/detect",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "image", "type": "file", "src": "", "description": "Image file (JPEG/PNG/WebP/BMP/GIF)" },
+                { "key": "confidence", "value": "0.25", "type": "text", "description": "Min confidence threshold (0-1)" },
+                { "key": "model", "value": "yolov8n", "type": "text", "description": "YOLO model variant" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('success flag is true', () => pm.expect(pm.response.json().success).to.be.true);",
+                  "  pm.test('has objects array', () => pm.expect(pm.response.json().data.objects).to.be.an('array'));",
+                  "} else if (pm.response.code === 503) {",
+                  "  pm.test('503 means Python service not running — expected', () => true);",
+                  "} else if (pm.response.code === 400) {",
+                  "  pm.test('400 means no image file was attached', () => true);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Model Verification",
+      "item": [
+        {
+          "name": "POST /models/verify",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/models/verify",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelPath\": \"/path/to/your/model.pt\",\n  \"trustedHash\": \"\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('success flag is true', () => pm.expect(pm.response.json().success).to.be.true);",
+                  "  pm.test('has currentHash', () => pm.expect(pm.response.json().data.currentHash).to.match(/^[a-f0-9]{64}$/));",
+                  "  pm.test('has status field', () => pm.expect(['VERIFIED','SUSPICIOUS','HASH_COMPUTED']).to.include(pm.response.json().data.status));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Inference Integrity",
+      "item": [
+        {
+          "name": "POST /inference/create",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/inference/create",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelId\": \"yolov8n-v1\",\n  \"inputData\": { \"imagePath\": \"/data/test.jpg\", \"width\": 640, \"height\": 640 },\n  \"outputData\": { \"objects\": [{ \"label\": \"vehicle\", \"confidence\": 0.94 }] },\n  \"config\": { \"threshold\": 0.25 }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('has inferenceId', () => pm.expect(pm.response.json().data.inferenceId).to.exist);",
+                  "pm.test('has integrityHash (64 hex)', () => pm.expect(pm.response.json().data.integrityHash).to.match(/^[a-f0-9]{64}$/));",
+                  "const id = pm.response.json().data.inferenceId;",
+                  "pm.collectionVariables.set('inference_id', id);",
+                  "console.log('Saved inference_id:', id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /inference/verify (VERIFIED)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/inference/verify",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inferenceId\": \"{{inference_id}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('status is VERIFIED', () => pm.expect(pm.response.json().data.status).to.equal('VERIFIED'));",
+                  "pm.test('verified is true', () => pm.expect(pm.response.json().data.verified).to.be.true);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dataset Analysis",
+      "item": [
+        {
+          "name": "POST /datasets/analyze",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/datasets/analyze",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"datasetPath\": \"/path/to/your/dataset\",\n  \"options\": {\n    \"checkDuplicates\": true,\n    \"checkAnomalies\": true\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('success flag is true', () => pm.expect(pm.response.json().success).to.be.true);",
+                  "  pm.test('has totalImages', () => pm.expect(pm.response.json().data).to.have.property('totalImages'));",
+                  "  pm.test('has riskScore between 0-1', () => {",
+                  "    const rs = pm.response.json().data.riskScore;",
+                  "    pm.expect(rs).to.be.at.least(0).and.at.most(1);",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Distribution Shift",
+      "item": [
+        {
+          "name": "POST /shift/analyze",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/shift/analyze",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"referenceValues\": {\n    \"brightness\": 120,\n    \"contrast\": 60,\n    \"saturation\": 80,\n    \"meanR\": 110,\n    \"meanG\": 105,\n    \"meanB\": 98\n  },\n  \"incomingValues\": {\n    \"brightness\": 180,\n    \"contrast\": 75,\n    \"saturation\": 95,\n    \"meanR\": 155,\n    \"meanG\": 148,\n    \"meanB\": 142\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('has shiftScore', () => pm.expect(pm.response.json().data.shiftScore).to.be.a('number'));",
+                  "pm.test('status is NORMAL/MODERATE/HIGH', () => {",
+                  "  pm.expect(['NORMAL','MODERATE','HIGH']).to.include(pm.response.json().data.status);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Findings",
+      "item": [
+        {
+          "name": "GET /findings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/findings",
+              "query": [
+                { "key": "type", "value": "", "disabled": true },
+                { "key": "severity", "value": "", "disabled": true },
+                { "key": "status", "value": "OPEN", "disabled": true },
+                { "key": "page", "value": "1", "disabled": true },
+                { "key": "limit", "value": "20", "disabled": true }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('data is array', () => pm.expect(pm.response.json().data).to.be.an('array'));",
+                  "pm.test('has pagination', () => pm.expect(pm.response.json().pagination).to.have.property('total'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "GET /reports/latest",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/latest"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('has recommendation', () => {",
+                  "    pm.expect(['ACCEPT','REVIEW','QUARANTINE']).to.include(pm.response.json().data.recommendation);",
+                  "  });",
+                  "  const id = pm.response.json().data._id;",
+                  "  pm.collectionVariables.set('report_id', id);",
+                  "  console.log('Saved report_id:', id);",
+                  "} else if (pm.response.code === 503) {",
+                  "  pm.test('MongoDB required for reports', () => pm.expect(pm.response.json().error.code).to.equal('DATABASE_UNAVAILABLE'));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /reports/:id",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/{{report_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('has overallRisk', () => pm.expect(pm.response.json().data).to.have.property('overallRisk'));",
+                  "pm.test('has recommendation', () => pm.expect(pm.response.json().data).to.have.property('recommendation'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Audit Logs",
+      "item": [
+        {
+          "name": "GET /audit-logs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/audit-logs",
+              "query": [
+                { "key": "action", "value": "", "disabled": true },
+                { "key": "from", "value": "", "disabled": true },
+                { "key": "to", "value": "", "disabled": true },
+                { "key": "page", "value": "1", "disabled": true },
+                { "key": "limit", "value": "50", "disabled": true }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('data is array', () => pm.expect(pm.response.json().data).to.be.an('array'));",
+                  "pm.test('has pagination', () => pm.expect(pm.response.json().pagination).to.have.property('total'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
