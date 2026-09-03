@@ -14,6 +14,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 MODEL_PATH = BASE_DIR / "yolov8n.pt"
 
 MODEL_CACHE = {}
+MODEL = None
 
 
 def get_model(model_name: str):
@@ -72,11 +73,13 @@ def detect():
         model = get_model(model_name)
 
         results = model.predict(
-            source=str(image_path),
-            conf=confidence,
-            verbose=False,
-        )
-
+    source=str(image_path),
+    conf=confidence,
+    imgsz=320,
+    device="cpu",
+    max_det=50,
+    verbose=False,
+)
         detections = []
 
         for result in results:
