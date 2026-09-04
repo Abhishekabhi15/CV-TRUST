@@ -111,7 +111,7 @@ const dashboardMarkup = `
 
 
                     <a
-                        href="report.html"
+                        href="reports.html"
                         class="sidebar-link">
 
                         Assurance Reports
@@ -322,7 +322,7 @@ const dashboardMarkup = `
 
 
                             <a
-                                href="report.html"
+                                href="reports.html"
                                 class="btn btn-outline-primary btn-sm">
 
                                 View Report
