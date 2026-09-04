@@ -75,7 +75,7 @@ def detect():
         results = model.predict(
     source=str(image_path),
     conf=confidence,
-    imgsz=320,
+    imgsz=640,
     device="cpu",
     max_det=50,
     verbose=False,
