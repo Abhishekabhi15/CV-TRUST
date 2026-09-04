@@ -427,7 +427,8 @@
                         </h5>
 
                         <p class="text-muted">
-                            Samples included in the current analysis. ORIGINAL = first occurrence of hash. DUPLICATE = identical content seen before. SUSPICIOUS = anomalous dimensions.
+                            Samples included in the current analysis. <strong>ORIGINAL</strong> = canonical file selected per duplicate group (shortest filename; ties broken alphabetically). <strong>DUPLICATE</strong> = identical SHA-256 as another file. <strong>SUSPICIOUS</strong> = dimensions deviate &gt;50% from the dataset median. SHA-256 determines content identity; filename length determines canonical selection within each group.
+
                         </p>
 
 

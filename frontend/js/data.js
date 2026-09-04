@@ -118,133 +118,120 @@ analyzeBtn.addEventListener("click", async function () {
 
 async function analyzeDataset(files) {
 
+    // ── PASS 1: Hash all files + collect image info ───────────────────────────
     const fileResults = [];
 
-    const hashes = new Map();
-
-
     for (const file of files) {
-
-        const hash = await calculateHash(file);
-
+        const hash      = await calculateHash(file);
         const imageInfo = await getImageInfo(file);
 
-        // ── Determine original vs duplicate ──────────────────────────────────
-        // The FIRST file in the batch that has a given SHA-256 hash is the
-        // "original" for this session.  Every subsequent file with the SAME
-        // hash is a duplicate — regardless of filename.
-        // SHA-256 tells us the files are identical; it cannot tell us which
-        // one was created first outside this session, so we use upload order.
-        let isDuplicate = false;
-        let duplicateOf = null;
-
-        if (hashes.has(hash)) {
-            isDuplicate = true;
-            duplicateOf = hashes.get(hash);   // filename of the first occurrence
-        } else {
-            hashes.set(hash, file.name);
-        }
-
         fileResults.push({
-            file:        file,
-            hash:        hash,
-            isDuplicate: isDuplicate,
-            duplicateOf: duplicateOf,
-            width:       imageInfo.width,
-            height:      imageInfo.height,
-            brightness:  imageInfo.brightness
+            file:   file,
+            hash:   hash,
+            width:  imageInfo.width,
+            height: imageInfo.height,
+            brightness: imageInfo.brightness,
+            // filled in pass 2:
+            isDuplicate: false,
+            duplicateOf: null,
+            isCanonical: false,
+            suspicious:  false,
         });
-
     }
 
+    // ── GROUP by SHA-256 ──────────────────────────────────────────────────────
+    // hashGroups: Map<hash, fileResult[]>
+    const hashGroups = new Map();
+    for (const item of fileResults) {
+        if (!hashGroups.has(item.hash)) {
+            hashGroups.set(item.hash, []);
+        }
+        hashGroups.get(item.hash).push(item);
+    }
 
-    /*
-        Basic anomaly detection.
+    // ── CANONICAL SELECTION ───────────────────────────────────────────────────
+    // For every group with more than one member, elect one canonical file.
+    //
+    // Rule (deterministic, independent of scan order):
+    //   1. Shortest filename wins  — originals tend to have simpler names;
+    //      copies/duplicates typically gain a suffix ("-copy", "(1)", etc.)
+    //   2. On length tie: lexicographically smallest name wins
+    //      (ASCII order, case-sensitive, consistent across browsers).
+    //
+    // This rule never pattern-matches on words like "copy" or "original";
+    // it uses only filename length + alphabetic order.
+    //
+    function selectCanonical(group) {
+        return group.slice().sort(function (a, b) {
+            const lenDiff = a.file.name.length - b.file.name.length;
+            if (lenDiff !== 0) return lenDiff;           // shorter = canonical
+            return a.file.name.localeCompare(b.file.name); // tiebreak: a–z
+        })[0];
+    }
 
-        Images are considered suspicious when their
-        dimensions are significantly different from
-        the median dimensions of the dataset.
-    */
+    // ── PASS 2: Annotate each file ────────────────────────────────────────────
+    const canonicalNames = new Map(); // hash → canonical filename
 
-    const widths = fileResults
-        .map(item => item.width)
-        .filter(value => value > 0);
+    for (const [hash, group] of hashGroups) {
+        const canonical = selectCanonical(group);
+        canonicalNames.set(hash, canonical.file.name);
 
-    const heights = fileResults
-        .map(item => item.height)
-        .filter(value => value > 0);
+        for (const item of group) {
+            if (item.file.name === canonical.file.name) {
+                item.isCanonical = true;
+                item.isDuplicate = false;
+                item.duplicateOf = null;
+            } else {
+                item.isCanonical = false;
+                item.isDuplicate = true;
+                item.duplicateOf = canonical.file.name;
+            }
+        }
+    }
 
+    // ── SUSPICIOUS DETECTION ──────────────────────────────────────────────────
+    // Only check non-duplicate files: a duplicate is already classified.
+    // Suspicious = dimensions differ from the dataset median by > 50 %.
+    const widths  = fileResults.map(i => i.width ).filter(v => v > 0);
+    const heights = fileResults.map(i => i.height).filter(v => v > 0);
 
-    const medianWidth = getMedian(widths);
-
+    const medianWidth  = getMedian(widths);
     const medianHeight = getMedian(heights);
-
 
     let suspiciousCount = 0;
 
-
-    fileResults.forEach(item => {
-
-        // Only flag non-duplicates as suspicious based on dimensions.
-        // Duplicates are already classified — no double-penalising.
-        if (!item.isDuplicate) {
-            const widthDiff  = Math.abs(item.width  - medianWidth)  / medianWidth;
-            const heightDiff = Math.abs(item.height - medianHeight) / medianHeight;
-            item.suspicious = widthDiff > 0.50 || heightDiff > 0.50;
-        } else {
-            item.suspicious = false;
+    for (const item of fileResults) {
+        if (item.isDuplicate) {
+            item.suspicious = false;        // never double-classify
+            continue;
         }
-
-        if (item.suspicious) {
-            suspiciousCount++;
-        }
-    });
-
-    // uniqueCount = files whose hash is not a duplicate
-    const uniqueCount    = hashes.size;
-    const duplicateCount = files.length - uniqueCount;
-
-
-    /*
-        Risk calculation.
-
-        Duplicate samples contribute to risk.
-        Suspicious samples contribute to risk.
-    */
-
-    let risk = 0;
-
-
-    if (files.length > 0) {
-
-        const duplicateRisk =
-            (duplicateCount / files.length) * 60;
-
-        const suspiciousRisk =
-            (suspiciousCount / files.length) * 40;
-
-
-        risk = Math.round(
-            duplicateRisk + suspiciousRisk
-        );
-
+        const widthDiff  = Math.abs(item.width  - medianWidth)  / (medianWidth  || 1);
+        const heightDiff = Math.abs(item.height - medianHeight) / (medianHeight || 1);
+        item.suspicious  = widthDiff > 0.50 || heightDiff > 0.50;
+        if (item.suspicious) suspiciousCount++;
     }
 
+    // ── COUNTS ────────────────────────────────────────────────────────────────
+    // uniqueCount  = number of distinct hashes (= number of canonical files)
+    // duplicateCount = total files minus canonical files
+    const uniqueCount    = hashGroups.size;
+    const duplicateCount = files.length - uniqueCount;
+
+    // ── RISK SCORE ────────────────────────────────────────────────────────────
+    let risk = 0;
+    if (files.length > 0) {
+        const duplicateRisk  = (duplicateCount  / files.length) * 60;
+        const suspiciousRisk = (suspiciousCount / files.length) * 40;
+        risk = Math.round(duplicateRisk + suspiciousRisk);
+    }
 
     return {
-
         total:      files.length,
-
         unique:     uniqueCount,
-
         duplicates: duplicateCount,
-
         suspicious: suspiciousCount,
-
         risk:       risk,
-
-        files:      fileResults
-
+        files:      fileResults,
     };
 
 }
