@@ -1,7 +1,9 @@
 /* =========================================
    CV-TRUST VISION DETECTION
-   FRONTEND DEMO
+   LIVE YOLO BACKEND INTEGRATION
 ========================================= */
+
+const API_BASE_URL = "https://cv-trust-backend-oh3y.onrender.com";
 
 let selectedImage = null;
 let imageObject = null;
@@ -9,16 +11,13 @@ let imageObject = null;
 const imageInput = document.getElementById("imageInput");
 const detectBtn = document.getElementById("detectBtn");
 const selectedImageInfo = document.getElementById("selectedImageInfo");
-
 const detectionSection = document.getElementById("detectionSection");
 const detectionStatus = document.getElementById("detectionStatus");
-
 const detectionCanvas = document.getElementById("detectionCanvas");
 const ctx = detectionCanvas.getContext("2d");
 
 const objectCount = document.getElementById("objectCount");
 const averageConfidence = document.getElementById("averageConfidence");
-
 const detectionResults = document.getElementById("detectionResults");
 
 const modelName = document.getElementById("modelName");
@@ -31,7 +30,6 @@ const resultStatus = document.getElementById("resultStatus");
 ========================================= */
 
 imageInput.addEventListener("change", function () {
-
     const file = this.files[0];
 
     if (!file) {
@@ -39,11 +37,8 @@ imageInput.addEventListener("change", function () {
     }
 
     if (!file.type.startsWith("image/")) {
-
         alert("Please select a valid image file.");
-
         imageInput.value = "";
-
         return;
     }
 
@@ -63,47 +58,48 @@ imageInput.addEventListener("change", function () {
     detectionSection.classList.remove("d-none");
 
     imageName.textContent = file.name;
-
     resultStatus.textContent = "Ready";
+    modelName.textContent = "YOLOv8";
 
-    modelName.textContent = "YOLO";
+    objectCount.textContent = "—";
+    averageConfidence.textContent = "—";
 
-    /* Load image */
+    detectionResults.innerHTML = `
+        <div class="text-muted">
+            Run detection to see results.
+        </div>
+    `;
 
+    /* Load selected image */
     const reader = new FileReader();
 
     reader.onload = function (event) {
-
         imageObject = new Image();
 
         imageObject.onload = function () {
-
             drawImage([]);
-
         };
 
         imageObject.src = event.target.result;
     };
 
     reader.readAsDataURL(file);
-
 });
 
 
 /* =========================================
-   DETECTION BUTTON
+   LIVE YOLO DETECTION
 ========================================= */
 
-detectBtn.addEventListener("click", function () {
+detectBtn.addEventListener("click", async function () {
 
     if (!selectedImage || !imageObject) {
+        alert("Please select an image first.");
         return;
     }
 
     detectBtn.disabled = true;
-
-    detectBtn.textContent =
-        "Analyzing...";
+    detectBtn.textContent = "Analyzing...";
 
     detectionStatus.className =
         "badge bg-warning text-dark p-2";
@@ -111,72 +107,136 @@ detectBtn.addEventListener("click", function () {
     detectionStatus.textContent =
         "ANALYZING";
 
+    resultStatus.textContent =
+        "Processing image...";
 
-    /*
-       Small delay only for prototype
-       to simulate model processing.
-    */
+    try {
 
-    setTimeout(function () {
+        const formData = new FormData();
 
-        runDemoDetection();
+        formData.append("image", selectedImage);
+
+        const response = await fetch(
+            `${API_BASE_URL}/api/detect`,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            let errorMessage = "Detection failed.";
+
+            if (result.message) {
+                errorMessage = result.message;
+            } else if (typeof result.error === "string") {
+                errorMessage = result.error;
+            } else if (result.error) {
+                errorMessage = JSON.stringify(result.error, null, 2);
+            }
+
+throw new Error(errorMessage);
+        }
+
+        /*
+         * Backend response:
+         *
+         * result.data.objects
+         *
+         * Each object contains:
+         * label
+         * confidence
+         * bbox [x1, y1, x2, y2]
+         */
+
+        const backendObjects =
+            result.data?.objects || [];
+
+        const detections =
+            backendObjects.map(function (item) {
+
+                return {
+                    label: item.label,
+                    confidence: Number(item.confidence) || 0,
+                    box: {
+                        x1: Number(item.bbox?.[0]) || 0,
+                        y1: Number(item.bbox?.[1]) || 0,
+                        x2: Number(item.bbox?.[2]) || 0,
+                        y2: Number(item.bbox?.[3]) || 0
+                    }
+                };
+
+            });
+
+        displayDetectionData(detections, result);
+
+    } catch (error) {
+
+        console.error("YOLO detection error:", error);
+
+        detectionStatus.className =
+            "badge bg-danger p-2";
+
+        detectionStatus.textContent =
+            "DETECTION FAILED";
+
+        resultStatus.textContent =
+            "Detection failed";
+
+        detectionResults.innerHTML = `
+            <div class="text-danger">
+                <strong>Detection failed</strong>
+                <br>
+                <small>${escapeHtml(error.message)}</small>
+            </div>
+        `;
+
+        alert(
+    "YOLO detection failed.\n\n" +
+    error.message
+);
+
+    } finally {
 
         detectBtn.disabled = false;
 
         detectBtn.textContent =
             "Run YOLO Detection";
-
-    }, 1000);
-
+    }
 });
 
 
 /* =========================================
-   DEMO YOLO RESULT
+   DISPLAY LIVE DETECTION DATA
 ========================================= */
 
-function runDemoDetection() {
-
-    /*
-       Demo detections.
-
-       These are frontend demonstration values.
-       Later backend data can replace them.
-    */
-
-    const detections = createDemoDetections();
-
+function displayDetectionData(detections, result) {
 
     objectCount.textContent =
         detections.length;
 
-
     let totalConfidence = 0;
 
     detections.forEach(function (item) {
-
         totalConfidence += item.confidence;
-
     });
-
 
     const average =
         detections.length > 0
             ? totalConfidence / detections.length
             : 0;
 
-
     averageConfidence.textContent =
         Math.round(average * 100) + "%";
 
-
     modelName.textContent =
-        "YOLO";
-
+        result.data?.modelUsed || "YOLOv8";
 
     resultStatus.textContent =
-        detections.length + " objects detected";
-
+        detections.length +
+        " objects detected";
 
     detectionStatus.className =
         "badge bg-success p-2";
@@ -184,55 +244,9 @@ function runDemoDetection() {
     detectionStatus.textContent =
         "DETECTION COMPLETE";
 
-
     drawImage(detections);
 
     displayResults(detections);
-
-}
-
-
-/* =========================================
-   CREATE DEMO DETECTIONS
-========================================= */
-
-function createDemoDetections() {
-
-    const width = imageObject.width;
-    const height = imageObject.height;
-
-
-    /*
-       The boxes are calculated according
-       to the uploaded image size.
-    */
-
-    return [
-
-        {
-            label: "Person",
-            confidence: 0.94,
-            box: {
-                x1: width * 0.10,
-                y1: height * 0.15,
-                x2: width * 0.40,
-                y2: height * 0.85
-            }
-        },
-
-        {
-            label: "Vehicle",
-            confidence: 0.89,
-            box: {
-                x1: width * 0.50,
-                y1: height * 0.45,
-                x2: width * 0.85,
-                y2: height * 0.85
-            }
-        }
-
-    ];
-
 }
 
 
@@ -246,10 +260,8 @@ function drawImage(detections) {
         return;
     }
 
-
     const maxWidth = 850;
     const maxHeight = 600;
-
 
     const scale = Math.min(
         maxWidth / imageObject.width,
@@ -257,13 +269,11 @@ function drawImage(detections) {
         1
     );
 
-
     detectionCanvas.width =
         imageObject.width * scale;
 
     detectionCanvas.height =
         imageObject.height * scale;
-
 
     ctx.clearRect(
         0,
@@ -271,7 +281,6 @@ function drawImage(detections) {
         detectionCanvas.width,
         detectionCanvas.height
     );
-
 
     ctx.drawImage(
         imageObject,
@@ -281,13 +290,9 @@ function drawImage(detections) {
         detectionCanvas.height
     );
 
-
     detections.forEach(function (item) {
-
         drawBoundingBox(item, scale);
-
     });
-
 }
 
 
@@ -309,9 +314,7 @@ function drawBoundingBox(item, scale) {
     const height =
         (item.box.y2 - item.box.y1) * scale;
 
-
     ctx.lineWidth = 3;
-
     ctx.strokeStyle = "#2563eb";
 
     ctx.strokeRect(
@@ -321,26 +324,20 @@ function drawBoundingBox(item, scale) {
         height
     );
 
-
     const confidence =
         Math.round(item.confidence * 100);
-
 
     const label =
         item.label + " " + confidence + "%";
 
-
     ctx.font =
         "bold 14px Arial";
-
 
     const textWidth =
         ctx.measureText(label).width;
 
-
     ctx.fillStyle =
         "#2563eb";
-
 
     ctx.fillRect(
         x,
@@ -349,17 +346,14 @@ function drawBoundingBox(item, scale) {
         25
     );
 
-
     ctx.fillStyle =
         "#ffffff";
-
 
     ctx.fillText(
         label,
         x + 6,
         Math.max(17, y - 8)
     );
-
 }
 
 
@@ -371,48 +365,46 @@ function displayResults(detections) {
 
     detectionResults.innerHTML = "";
 
+    if (detections.length === 0) {
+
+        detectionResults.innerHTML = `
+            <div class="text-muted">
+                No objects detected.
+            </div>
+        `;
+
+        return;
+    }
 
     detections.forEach(function (item, index) {
 
         const confidence =
             Math.round(item.confidence * 100);
 
-
         const resultItem =
             document.createElement("div");
-
 
         resultItem.className =
             "detection-result-item";
 
-
         resultItem.innerHTML = `
-
             <div>
-
                 <strong>
-                    ${index + 1}. ${item.label}
+                    ${index + 1}. ${escapeHtml(item.label)}
                 </strong>
-
                 <br>
-
                 <small class="text-muted">
                     Bounding box detected
                 </small>
-
             </div>
 
             <span class="badge bg-success">
                 ${confidence}%
             </span>
-
         `;
 
-
         detectionResults.appendChild(resultItem);
-
     });
-
 }
 
 
@@ -423,21 +415,31 @@ function displayResults(detections) {
 function formatFileSize(bytes) {
 
     if (bytes < 1024) {
-
         return bytes + " B";
-
     }
 
     if (bytes < 1024 * 1024) {
-
         return (
             bytes / 1024
         ).toFixed(1) + " KB";
-
     }
 
     return (
         bytes / (1024 * 1024)
     ).toFixed(1) + " MB";
+}
 
+
+/* =========================================
+   HTML ESCAPING
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
