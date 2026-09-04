@@ -77,6 +77,14 @@ function normaliseDetectionResponse(data, imagePath) {
       processingTime: data.processingTime || data.processing_time || null,
       modelUsed: data.model || data.modelUsed || null,
       rawCount: data.objects.length,
+      // New fields from updated Python service
+      modelHash:          data.modelHash || null,
+      device:             data.device || null,
+      imgsz:              data.imgsz || null,
+      confidenceThreshold: data.confidenceThreshold || null,
+      maxDet:             data.maxDet || null,
+      imageStats:         data.imageStats || null,
+      shiftAnalysis:      data.shiftAnalysis || null,
     };
   }
 
@@ -88,6 +96,9 @@ function normaliseDetectionResponse(data, imagePath) {
       processingTime: data.processing_time || null,
       modelUsed: data.model || null,
       rawCount: data.detections.length,
+      modelHash: null, device: null, imgsz: null,
+      confidenceThreshold: null, maxDet: null,
+      imageStats: null, shiftAnalysis: null,
     };
   }
 
@@ -99,6 +110,9 @@ function normaliseDetectionResponse(data, imagePath) {
       processingTime: data.processing_time || null,
       modelUsed: data.model || null,
       rawCount: data.results.length,
+      modelHash: null, device: null, imgsz: null,
+      confidenceThreshold: null, maxDet: null,
+      imageStats: null, shiftAnalysis: null,
     };
   }
 
@@ -110,6 +124,9 @@ function normaliseDetectionResponse(data, imagePath) {
       processingTime: null,
       modelUsed: null,
       rawCount: data.length,
+      modelHash: null, device: null, imgsz: null,
+      confidenceThreshold: null, maxDet: null,
+      imageStats: null, shiftAnalysis: null,
     };
   }
 

@@ -18,7 +18,7 @@ module.exports = {
   pythonServiceUrl: process.env.PYTHON_SERVICE_URL || "http://localhost:5000",
 
   pythonServiceTimeout:
-    parseInt(process.env.PYTHON_SERVICE_TIMEOUT, 10) || 30000,
+    parseInt(process.env.PYTHON_SERVICE_TIMEOUT, 10) || 90000,  // 90s default for Render free CPU
 
   // Can be set to the deployed frontend URL on Render.
   corsOrigin: process.env.CORS_ORIGIN || "*",

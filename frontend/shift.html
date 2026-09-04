@@ -3,1094 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>CV-TRUST | Distribution Shift</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* ================================
-           DISTRIBUTION SHIFT PAGE
-        ================================= */
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        /* TOP BAR */
-
-        .topbar {
-            height: 70px;
-            background: #202428;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logout-btn {
-            padding: 9px 15px;
-            border: 1px solid #ffffff;
-            border-radius: 10px;
-            background: transparent;
-            color: white;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            background: #ffffff;
-            color: #202428;
-        }
-
-        /* LAYOUT */
-
-        .layout {
-            display: flex;
-            min-height: calc(100vh - 70px);
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 278px;
-            background: #111827;
-            color: white;
-            padding: 22px 17px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-title {
-            color: #aebbd0;
-            font-size: 11px;
-            letter-spacing: 1px;
-            margin: 2px 0 12px;
-        }
-
-        .sidebar-section {
-            margin-bottom: 25px;
-        }
-
-        .sidebar a {
-            display: block;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px 11px;
-            border-radius: 6px;
-            margin-bottom: 3px;
-            font-size: 13px;
-        }
-
-        .sidebar a:hover {
-            background: #1f2937;
-        }
-
-        .sidebar a.active {
-            background: #2864e8;
-        }
-
-        /* MAIN */
-
-        .main {
-            flex: 1;
-            padding: 26px;
-            overflow-x: hidden;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-        }
-
-        .page-header h1 {
-            margin: 0 0 8px;
-            font-size: 30px;
-            color: #16263b;
-        }
-
-        .page-header p {
-            margin: 0;
-            color: #667085;
-            font-size: 14px;
-        }
-
-        /* STATUS */
-
-        .status {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .status.green {
-            background: #168a5b;
-            color: white;
-        }
-
-        .status.yellow {
-            background: #ffbf00;
-            color: #111827;
-        }
-
-        .status.red {
-            background: #e63950;
-            color: white;
-        }
-
-        /* CARD */
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 22px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        }
-
-        .card h2 {
-            margin: 0 0 7px;
-            font-size: 19px;
-            color: #172b44;
-        }
-
-        .card-subtitle {
-            margin: 0 0 20px;
-            color: #667085;
-            font-size: 14px;
-        }
-
-        /* DATASET INPUT */
-
-        .dataset-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .input-box {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d9dee7;
-            border-radius: 8px;
-            background: #ffffff;
-        }
-
-        .select-box {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d9dee7;
-            border-radius: 8px;
-            background: white;
-        }
-
-        .analyze-btn {
-            margin-top: 20px;
-            padding: 11px 17px;
-            border: none;
-            border-radius: 8px;
-            background: #1769f5;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .analyze-btn:hover {
-            background: #1257d4;
-        }
-
-        /* SUMMARY CARDS */
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .summary-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        }
-
-        .summary-title {
-            color: #667085;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        .summary-value {
-            font-size: 30px;
-            font-weight: bold;
-            color: #172b44;
-            margin-bottom: 8px;
-        }
-
-        .summary-description {
-            color: #667085;
-            font-size: 13px;
-        }
-
-        /* RISK */
-
-        .risk-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .risk-value {
-            font-size: 30px;
-            color: #f0a900;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 14px;
-            background: #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 18px 0;
-        }
-
-        .progress-bar {
-            width: 32%;
-            height: 100%;
-            background: #ffb900;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .warning-box {
-            padding: 14px;
-            background: #fff3cd;
-            border: 1px solid #ffe08a;
-            color: #8a6200;
-            border-radius: 7px;
-            font-size: 14px;
-        }
-
-        /* FEATURE TABLE */
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th {
-            text-align: left;
-            color: #667085;
-            font-weight: 500;
-            padding: 13px 8px;
-            border-bottom: 1px solid #dfe3e8;
-        }
-
-        td {
-            padding: 13px 8px;
-            border-bottom: 1px solid #e1e5ea;
-        }
-
-        /* DISTRIBUTION BARS */
-
-        .feature-row {
-            margin-bottom: 20px;
-        }
-
-        .feature-name {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 7px;
-            font-size: 14px;
-        }
-
-        .distribution-bar {
-            height: 12px;
-            background: #e6e9ee;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .distribution-fill {
-            height: 100%;
-            border-radius: 8px;
-        }
-
-        .normal {
-            width: 25%;
-            background: #198754;
-        }
-
-        .moderate {
-            width: 48%;
-            background: #ffb900;
-        }
-
-        .high {
-            width: 76%;
-            background: #e63950;
-        }
-
-        /* CONCLUSION */
-
-        .conclusion {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 16px;
-            border-radius: 8px;
-            background: #f8fafc;
-            border: 1px solid #e1e5ea;
-        }
-
-        .conclusion-text strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .conclusion-text span {
-            color: #667085;
-            font-size: 13px;
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 1000px) {
-
-            .summary-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .dataset-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 700px) {
-
-            .sidebar {
-                width: 210px;
-            }
-
-            .main {
-                padding: 18px;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
+    <!-- TOP NAVBAR -->
+    <nav class="navbar navbar-dark bg-dark px-4">
+        <span class="navbar-brand fw-bold">CV-TRUST</span>
+        <div class="text-white">Analyst<a href="index.html" class="btn btn-outline-light btn-sm ms-3">Logout</a></div>
+    </nav>
 
-    <!-- ================================
-         TOP BAR
-    ================================= -->
-
-    <header class="topbar">
-
-        <div class="logo">
-            CV-TRUST
-        </div>
-
-        <div class="topbar-right">
-            <span>Analyst</span>
-
-            <button class="logout-btn" onclick="logout()">
-                Logout
-            </button>
-        </div>
-
-    </header>
-
-
-    <!-- ================================
-         MAIN LAYOUT
-    ================================= -->
-
-    <div class="layout">
-
-
-        <!-- SIDEBAR -->
-
-        <aside class="sidebar">
-
-            <div class="sidebar-section">
-
-                <div class="sidebar-title">
-                    ASSURANCE
-                </div>
-
-                <a href="dashboard.html">
-                    Dashboard
-                </a>
-
-                <a href="data.html">
-                    Data Assurance
-                </a>
-
-                <a href="vision.html">
-                    Vision Detection
-                </a>
-
-                <a href="model.html">
-                    Model Assurance
-                </a>
-
-                <a href="inference.html">
-                    Inference Provenance
-                </a>
-
-                <a href="shift.html" class="active">
-                    Distribution Shift
-                </a>
-
+    <!-- MAIN LAYOUT -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- SIDEBAR -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h6 class="sidebar-heading">ASSURANCE</h6>
+                <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+                <a href="data.html" class="sidebar-link">Data Assurance</a>
+                <a href="vision.html" class="sidebar-link">Vision Detection</a>
+                <a href="model.html" class="sidebar-link">Model Assurance</a>
+                <a href="inference.html" class="sidebar-link">Inference Provenance</a>
+                <a href="shift.html" class="sidebar-link active">Distribution Shift</a>
+                <h6 class="sidebar-heading mt-4">REPORTING</h6>
+                <a href="reports.html" class="sidebar-link">Assurance Reports</a>
+                <a href="logs.html" class="sidebar-link">Audit Logs</a>
             </div>
 
-
-            <div class="sidebar-section">
-
-                <div class="sidebar-title">
-                    REPORTING
-                </div>
-
-                <a href="reports.html">
-                    Assurance Reports
-                </a>
-
-                <a href="audit.html">
-                    Audit Logs
-                </a>
-
-            </div>
-
-        </aside>
-
-
-        <!-- ================================
-             MAIN CONTENT
-        ================================= -->
-
-        <main class="main">
-
-
-            <!-- PAGE HEADER -->
-
-            <div class="page-header">
-
-                <div>
-
-                    <h1>
-                        Distribution Shift
-                    </h1>
-
-                    <p>
-                        Dataset distribution monitoring and shift detection analysis
-                    </p>
-
-                </div>
-
-                <span class="status yellow">
-                    Review Required
-                </span>
-
-            </div>
-
-
-            <!-- ================================
-                 DATASET INPUT
-            ================================= -->
-
-            <section class="card">
-
-                <h2>
-                    Dataset Comparison
-                </h2>
-
-                <p class="card-subtitle">
-                    Compare reference and current datasets to identify distribution changes.
-                </p>
-
-
-                <div class="dataset-grid">
-
-                    <div class="input-group">
-
-                        <label>
-                            Reference Dataset
-                        </label>
-
-                        <select class="select-box" id="referenceDataset">
-
-                            <option>
-                                Dataset_01
-                            </option>
-
-                            <option>
-                                Dataset_02
-                            </option>
-
-                            <option>
-                                Training Dataset
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Current Dataset
-                        </label>
-
-                        <select class="select-box" id="currentDataset">
-
-                            <option>
-                                Dataset_02
-                            </option>
-
-                            <option>
-                                Dataset_03
-                            </option>
-
-                            <option>
-                                Production Dataset
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <button class="analyze-btn" onclick="analyzeShift()">
-                    Analyze Distribution Shift
-                </button>
-
-            </section>
-
-
-            <!-- ================================
-                 SUMMARY
-            ================================= -->
-
-            <div class="summary-grid">
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-                        Reference Samples
-                    </div>
-
-                    <div class="summary-value">
-                        1,250
-                    </div>
-
-                    <div class="summary-description">
-                        Baseline dataset
-                    </div>
-
-                </div>
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-                        Current Samples
-                    </div>
-
-                    <div class="summary-value">
-                        1,180
-                    </div>
-
-                    <div class="summary-description">
-                        Latest dataset
-                    </div>
-
-                </div>
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-                        Features Analyzed
-                    </div>
-
-                    <div class="summary-value">
-                        12
-                    </div>
-
-                    <div class="summary-description">
-                        Distribution features
-                    </div>
-
-                </div>
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-                        Shifted Features
-                    </div>
-
-                    <div class="summary-value">
-                        3
-                    </div>
-
-                    <div class="summary-description">
-                        Require review
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ================================
-                 SHIFT RISK
-            ================================= -->
-
-            <section class="card">
-
-                <div class="risk-header">
-
+            <!-- MAIN CONTENT -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- PAGE HEADER -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-
-                        <h2>
-                            Distribution Shift Risk
-                        </h2>
-
-                        <p class="card-subtitle">
-                            Overall risk calculated from detected distribution changes.
-                        </p>
-
+                        <h2 class="fw-bold">Distribution Shift Analysis</h2>
+                        <p class="text-muted">Monitor inputs for data drift compared to the reference baseline.</p>
                     </div>
-
-                    <div class="risk-value">
-                        32%
+                    <div>
+                        <span id="shiftLastUpdated" class="text-muted small me-3"></span>
+                        <span id="shiftStatusBadge" class="status" style="background:#6b7280; color:white;">UNKNOWN</span>
                     </div>
-
                 </div>
 
-
-                <div class="progress-container">
-
-                    <div class="progress-bar">
-                        32%
+                <!-- LOADING & ERROR STATES -->
+                <div id="shiftLoadingState" class="dashboard-section mb-4 text-center py-5 d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-
+                    <p class="mt-3 text-muted">Analyzing distribution shift...</p>
                 </div>
 
-
-                <div class="warning-box">
-                    Moderate distribution shift detected. Review the affected features before deployment.
+                <div id="shiftErrorState" class="dashboard-section mb-4 d-none">
+                    <div class="alert alert-danger mb-0">
+                        <h6 class="alert-heading fw-bold">Analysis Error</h6>
+                        <p id="shiftErrorMsg" class="mb-0">Failed to load shift data.</p>
+                    </div>
+                    <button id="shiftRefreshBtn" class="btn btn-outline-primary mt-3">Retry</button>
                 </div>
 
-            </section>
-
-
-            <!-- ================================
-                 FEATURE ANALYSIS
-            ================================= -->
-
-            <section class="card">
-
-                <h2>
-                    Feature Distribution Analysis
-                </h2>
-
-                <p class="card-subtitle">
-                    Comparison of important feature distributions between datasets.
-                </p>
-
-
-                <div class="feature-row">
-
-                    <div class="feature-name">
-
-                        <span>
-                            Image Brightness
-                        </span>
-
-                        <span>
-                            18%
-                        </span>
-
+                <!-- DATA STATE -->
+                <div id="shiftDataState">
+                    <!-- SUMMARY CARDS -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <div class="dashboard-section h-100 text-center">
+                                <span class="text-muted small text-uppercase">Shift Status</span>
+                                <h4 id="shiftStatusValue" class="fw-bold mt-2">—</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-section h-100 text-center">
+                                <span class="text-muted small text-uppercase">Shift Score</span>
+                                <h4 id="shiftScoreValue" class="fw-bold mt-2">—</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-section h-100 text-center">
+                                <span class="text-muted small text-uppercase">Last Image Analyzed</span>
+                                <h6 id="shiftLastImage" class="fw-bold mt-3 text-truncate">—</h6>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-section h-100 text-center">
+                                <span class="text-muted small text-uppercase">Baseline Samples</span>
+                                <h4 id="shiftBaselineSamples" class="fw-bold mt-2">—</h4>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="distribution-bar">
-
-                        <div class="distribution-fill normal"></div>
-
+                    <!-- RISK SECTION -->
+                    <div class="dashboard-section mb-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="fw-bold mb-1">Overall Risk Level</h5>
+                                <p class="text-muted mb-0">Confidence loss due to data drift.</p>
+                            </div>
+                            <div id="shiftRiskValue" class="display-6">—</div>
+                        </div>
+                        <div class="progress mt-4 mb-3" style="height: 14px;">
+                            <div id="shiftRiskBar" class="progress-bar" role="progressbar" style="width: 0%; background: #6c757d;"></div>
+                        </div>
+                        <div id="shiftRiskMessage" class="warning-box bg-secondary text-white border-0 mt-3 p-3 rounded text-center">
+                            No data — run a detection to see shift analysis.
+                        </div>
                     </div>
 
+                    <div class="row g-4">
+                        <!-- METRICS BREAKDOWN -->
+                        <div class="col-md-8">
+                            <div class="dashboard-section h-100">
+                                <h5 class="fw-bold mb-3">Feature Shift Breakdown</h5>
+                                <p class="text-muted mb-4">Deviation of current image features from the reference baseline.</p>
+                                <div id="shiftMetricsContainer">
+                                    <p class="text-muted">No distribution shift data available yet. Run a YOLO detection first.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- IMAGE STATS -->
+                        <div class="col-md-4">
+                            <div class="dashboard-section h-100">
+                                <h5 class="fw-bold mb-3">Latest Image Statistics</h5>
+                                <p class="text-muted mb-4">Raw features extracted from the last processed image.</p>
+                                
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        Width <span id="imgStatWidth" class="fw-bold">—</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        Height <span id="imgStatHeight" class="fw-bold">—</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        Aspect Ratio <span id="imgStatAspect" class="fw-bold">—</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        Brightness <span id="imgStatBrightness" class="fw-bold">—</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-bottom-0">
+                                        Contrast <span id="imgStatContrast" class="fw-bold">—</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-                <div class="feature-row">
-
-                    <div class="feature-name">
-
-                        <span>
-                            Image Contrast
-                        </span>
-
-                        <span>
-                            42%
-                        </span>
-
-                    </div>
-
-                    <div class="distribution-bar">
-
-                        <div class="distribution-fill moderate"></div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="feature-row">
-
-                    <div class="feature-name">
-
-                        <span>
-                            Object Size
-                        </span>
-
-                        <span>
-                            71%
-                        </span>
-
-                    </div>
-
-                    <div class="distribution-bar">
-
-                        <div class="distribution-fill high"></div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="feature-row">
-
-                    <div class="feature-name">
-
-                        <span>
-                            Background Distribution
-                        </span>
-
-                        <span>
-                            35%
-                        </span>
-
-                    </div>
-
-                    <div class="distribution-bar">
-
-                        <div class="distribution-fill moderate"></div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ================================
-                 SHIFT RESULTS
-            ================================= -->
-
-            <section class="card">
-
-                <h2>
-                    Shift Detection Results
-                </h2>
-
-                <p class="card-subtitle">
-                    Latest distribution shift findings.
-                </p>
-
-
-                <div class="table-wrapper">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-
-                                <th>
-                                    Feature
-                                </th>
-
-                                <th>
-                                    Reference Mean
-                                </th>
-
-                                <th>
-                                    Current Mean
-                                </th>
-
-                                <th>
-                                    Shift Score
-                                </th>
-
-                                <th>
-                                    Status
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody>
-
-                            <tr>
-
-                                <td>
-                                    Image Brightness
-                                </td>
-
-                                <td>
-                                    124.6
-                                </td>
-
-                                <td>
-                                    129.2
-                                </td>
-
-                                <td>
-                                    0.18
-                                </td>
-
-                                <td>
-                                    <span class="status green">
-                                        Normal
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>
-                                    Image Contrast
-                                </td>
-
-                                <td>
-                                    48.2
-                                </td>
-
-                                <td>
-                                    57.4
-                                </td>
-
-                                <td>
-                                    0.42
-                                </td>
-
-                                <td>
-                                    <span class="status yellow">
-                                        Review
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>
-                                    Object Size
-                                </td>
-
-                                <td>
-                                    0.36
-                                </td>
-
-                                <td>
-                                    0.61
-                                </td>
-
-                                <td>
-                                    0.71
-                                </td>
-
-                                <td>
-                                    <span class="status red">
-                                        Significant Shift
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>
-                                    Background Distribution
-                                </td>
-
-                                <td>
-                                    0.44
-                                </td>
-
-                                <td>
-                                    0.59
-                                </td>
-
-                                <td>
-                                    0.35
-                                </td>
-
-                                <td>
-                                    <span class="status yellow">
-                                        Review
-                                    </span>
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-
-            <!-- ================================
-                 CONCLUSION
-            ================================= -->
-
-            <section class="card">
-
-                <h2>
-                    Assessment
-                </h2>
-
-                <p class="card-subtitle">
-                    Overall distribution shift conclusion.
-                </p>
-
-
-                <div class="conclusion">
-
-                    <span class="status yellow">
-                        REVIEW
-                    </span>
-
-                    <div class="conclusion-text">
-
-                        <strong>
-                            Moderate Distribution Shift Detected
-                        </strong>
-
-                        <span>
-                            Three features show measurable changes between the reference and current datasets. Analyst review is recommended before relying on the current dataset for production inference.
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-        </main>
-
+            </div>
+        </div>
     </div>
-
-
-    <!-- ================================
-         JAVASCRIPT
-    ================================= -->
-
-    <script>
-
-        function analyzeShift() {
-
-            const button = document.querySelector(".analyze-btn");
-
-            button.innerText = "Analyzing...";
-
-            button.disabled = true;
-
-            setTimeout(function () {
-
-                button.innerText = "Analysis Complete";
-
-                button.style.background = "#198754";
-
-                document.querySelector(".page-header .status").innerText =
-                    "Analysis Complete";
-
-                document.querySelector(".page-header .status").className =
-                    "status green";
-
-            }, 1000);
-
-        }
-
-
-        function logout() {
-
-            window.location.href = "index.html";
-
-        }
-
-    </script>
-
+    <script src="js/shift.js"></script>
 </body>
 </html>

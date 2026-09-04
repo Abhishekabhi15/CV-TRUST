@@ -129,43 +129,33 @@ async function analyzeDataset(files) {
 
         const imageInfo = await getImageInfo(file);
 
-
-        let duplicate = false;
+        // ── Determine original vs duplicate ──────────────────────────────────
+        // The FIRST file in the batch that has a given SHA-256 hash is the
+        // "original" for this session.  Every subsequent file with the SAME
+        // hash is a duplicate — regardless of filename.
+        // SHA-256 tells us the files are identical; it cannot tell us which
+        // one was created first outside this session, so we use upload order.
+        let isDuplicate = false;
+        let duplicateOf = null;
 
         if (hashes.has(hash)) {
-
-            duplicate = true;
-
-        }
-        else {
-
+            isDuplicate = true;
+            duplicateOf = hashes.get(hash);   // filename of the first occurrence
+        } else {
             hashes.set(hash, file.name);
-
         }
-
 
         fileResults.push({
-
-            file: file,
-
-            hash: hash,
-
-            duplicate: duplicate,
-
-            width: imageInfo.width,
-
-            height: imageInfo.height,
-
-            brightness: imageInfo.brightness
-
+            file:        file,
+            hash:        hash,
+            isDuplicate: isDuplicate,
+            duplicateOf: duplicateOf,
+            width:       imageInfo.width,
+            height:      imageInfo.height,
+            brightness:  imageInfo.brightness
         });
 
     }
-
-
-    const uniqueCount = hashes.size;
-
-    const duplicateCount = files.length - uniqueCount;
 
 
     /*
@@ -195,27 +185,24 @@ async function analyzeDataset(files) {
 
     fileResults.forEach(item => {
 
-        const widthDifference =
-            Math.abs(item.width - medianWidth) /
-            medianWidth;
-
-        const heightDifference =
-            Math.abs(item.height - medianHeight) /
-            medianHeight;
-
-
-        item.suspicious =
-            widthDifference > 0.50 ||
-            heightDifference > 0.50;
-
-
-        if (item.suspicious) {
-
-            suspiciousCount++;
-
+        // Only flag non-duplicates as suspicious based on dimensions.
+        // Duplicates are already classified — no double-penalising.
+        if (!item.isDuplicate) {
+            const widthDiff  = Math.abs(item.width  - medianWidth)  / medianWidth;
+            const heightDiff = Math.abs(item.height - medianHeight) / medianHeight;
+            item.suspicious = widthDiff > 0.50 || heightDiff > 0.50;
+        } else {
+            item.suspicious = false;
         }
 
+        if (item.suspicious) {
+            suspiciousCount++;
+        }
     });
+
+    // uniqueCount = files whose hash is not a duplicate
+    const uniqueCount    = hashes.size;
+    const duplicateCount = files.length - uniqueCount;
 
 
     /*
@@ -246,17 +233,17 @@ async function analyzeDataset(files) {
 
     return {
 
-        total: files.length,
+        total:      files.length,
 
-        unique: uniqueCount,
+        unique:     uniqueCount,
 
         duplicates: duplicateCount,
 
         suspicious: suspiciousCount,
 
-        risk: risk,
+        risk:       risk,
 
-        files: fileResults
+        files:      fileResults
 
     };
 
@@ -614,75 +601,41 @@ function displayResults(results) {
 
     results.files.forEach(function (item, index) {
 
-        const row =
-            document.createElement("tr");
-
+        const row = document.createElement("tr");
 
         let statusHTML;
 
-
-        if (item.duplicate) {
-
-            statusHTML =
-                '<span class="badge bg-danger">DUPLICATE</span>';
-
+        if (item.isDuplicate) {
+            // Duplicate of a previously seen hash
+            const origLabel = item.duplicateOf
+                ? ` of <em>${escapeHTML(item.duplicateOf)}</em>`
+                : '';
+            statusHTML = `<span class="badge bg-danger">DUPLICATE${origLabel ? ' — ' + origLabel : ''}</span>`;
+        } else if (item.suspicious) {
+            statusHTML = '<span class="badge bg-warning text-dark">SUSPICIOUS</span>';
+        } else {
+            // First occurrence of this hash = ORIGINAL for this session
+            statusHTML = '<span class="badge bg-success">ORIGINAL</span>';
         }
 
-        else if (item.suspicious) {
-
-            statusHTML =
-                '<span class="badge bg-warning text-dark">SUSPICIOUS</span>';
-
-        }
-
-        else {
-
-            statusHTML =
-                '<span class="badge bg-success">NORMAL</span>';
-
-        }
-
-
-        const size =
-            formatFileSize(
-                item.file.size
-            );
-
-
-        const dimensions =
-            item.width +
-            " × " +
-            item.height;
-
+        const size       = formatFileSize(item.file.size);
+        const dimensions = item.width + " × " + item.height;
+        const hashShort  = item.hash ? item.hash.substring(0, 12) + "…" : "—";
 
         row.innerHTML = `
-
-            <td>
-                ${index + 1}
-            </td>
-
-            <td>
-                ${escapeHTML(item.file.name)}
-            </td>
-
-            <td>
-                ${size}
-            </td>
-
-            <td>
-                ${dimensions}
-            </td>
-
-            <td>
-                ${statusHTML}
-            </td>
-
+            <td>${index + 1}</td>
+            <td>${escapeHTML(item.file.name)}</td>
+            <td>${size}</td>
+            <td>${dimensions}</td>
+            <td><code class="small text-muted" title="${item.hash || ''}">${hashShort}</code></td>
+            <td>${statusHTML}</td>
         `;
-
 
         fileTableBody.appendChild(row);
 
     });
+
+
 
 
     /* Findings */

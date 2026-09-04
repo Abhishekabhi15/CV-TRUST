@@ -1,555 +1,270 @@
-// CV-TRUST Dashboard JavaScript
-// Dashboard functionality and event handlers
-
-const dashboardMarkup = `
-    <body>
-
-        <!-- =========================
-             NAVBAR
-        ========================== -->
-
-        <nav class="navbar navbar-dark bg-dark px-4">
-
-            <span class="navbar-brand fw-bold">
-                CV-TRUST
-            </span>
-
-            <div class="text-white">
-
-                Analyst
-
-                <a
-                    href="index.html"
-                    class="btn btn-outline-light btn-sm ms-3">
-
-                    Logout
-
-                </a>
-
-            </div>
-
-        </nav>
-
-
-        <!-- =========================
-             PAGE
-        ========================== -->
-
-        <div class="container-fluid">
-
-            <div class="row">
-
-
-                <!-- =========================
-                     SIDEBAR
-                ========================== -->
-
-                <div class="col-md-3 col-lg-2 sidebar">
-
-                    <h6 class="sidebar-heading">
-                        ASSURANCE
-                    </h6>
-
-
-                    <a
-                        href="dashboard.html"
-                        class="sidebar-link active">
-
-                        Dashboard
-
-                    </a>
-
-
-                    <a
-                        href="data.html"
-                        class="sidebar-link">
-
-                        Data Assurance
-
-                    </a>
-
-
-                    <a
-                        href="vision.html"
-                        class="sidebar-link">
-
-                        Vision Detection
-
-                    </a>
-
-
-                    <a
-                        href="model.html"
-                        class="sidebar-link">
-
-                        Model Assurance
-
-                    </a>
-
-
-                    <a
-                        href="inference.html"
-                        class="sidebar-link">
-
-                        Inference Provenance
-
-                    </a>
-
-
-                    <a
-                        href="shift.html"
-                        class="sidebar-link">
-
-                        Distribution Shift
-
-                    </a>
-
-
-                    <h6 class="sidebar-heading mt-4">
-                        REPORTING
-                    </h6>
-
-
-                    <a
-                        href="reports.html"
-                        class="sidebar-link">
-
-                        Assurance Reports
-
-                    </a>
-
-
-                    <a
-                        href="logs.html"
-                        class="sidebar-link">
-
-                        Audit Logs
-
-                    </a>
-
-                </div>
-
-
-                <!-- =========================
-                     MAIN CONTENT
-                ========================== -->
-
-                <div class="col-md-9 col-lg-10 main-content">
-
-
-                    <!-- HEADER -->
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-
-                        <div>
-
-                            <h2 class="fw-bold">
-                                CV-TRUST Dashboard
-                            </h2>
-
-                            <p class="text-muted">
-                                Computer Vision Integrity Overview
-                            </p>
-
-                        </div>
-
-
-                        <span class="badge bg-success p-2">
-                            System Healthy
-                        </span>
-
-                    </div>
-
-
-
-                    <!-- =========================
-                         SUMMARY CARDS
-                    ========================== -->
-
-                    <div class="row g-4">
-
-
-                        <!-- RISK -->
-
-                        <div class="col-md-6 col-xl-3">
-
-                            <div class="dashboard-card">
-
-                                <p class="text-muted">
-                                    Overall Risk
-                                </p>
-
-                                <h2>
-                                    24%
-                                </h2>
-
-                                <span class="badge bg-warning text-dark">
-                                    REVIEW
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- ASSETS -->
-
-                        <div class="col-md-6 col-xl-3">
-
-                            <div class="dashboard-card">
-
-                                <p class="text-muted">
-                                    Total Assets
-                                </p>
-
-                                <h2>
-                                    18
-                                </h2>
-
-                                <span class="text-muted">
-                                    Datasets + Models
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- FINDINGS -->
-
-                        <div class="col-md-6 col-xl-3">
-
-                            <div class="dashboard-card">
-
-                                <p class="text-muted">
-                                    Active Findings
-                                </p>
-
-                                <h2>
-                                    5
-                                </h2>
-
-                                <span class="badge bg-danger">
-                                    ATTENTION
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- CONFIDENCE -->
-
-                        <div class="col-md-6 col-xl-3">
-
-                            <div class="dashboard-card">
-
-                                <p class="text-muted">
-                                    Assurance Confidence
-                                </p>
-
-                                <h2>
-                                    86%
-                                </h2>
-
-                                <span class="badge bg-success">
-                                    VERIFIED
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- =========================
-                         SYSTEM INTEGRITY
-                    ========================== -->
-
-                    <div class="dashboard-section mt-4">
-
-                        <h5 class="fw-bold">
-                            System Integrity
-                        </h5>
-
-                        <p class="text-muted">
-                            Current assurance confidence across the CV pipeline.
-                        </p>
-
-
-                        <h1 class="text-success">
-                            86%
-                        </h1>
-
-
-                        <div class="progress">
-
-                            <div
-                                class="progress-bar bg-success"
-                                style="width: 86%;">
-
-                                86%
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- =========================
-                         RECENT FINDINGS
-                    ========================== -->
-
-                    <div class="dashboard-section mt-4">
-
-                        <div class="d-flex justify-content-between">
-
-                            <div>
-
-                                <h5 class="fw-bold">
-                                    Recent Findings
-                                </h5>
-
-                                <p class="text-muted">
-                                    Latest integrity findings.
-                                </p>
-
-                            </div>
-
-
-                            <a
-                                href="reports.html"
-                                class="btn btn-outline-primary btn-sm">
-
-                                View Report
-
-                            </a>
-
-                        </div>
-
-
-                        <div class="table-responsive">
-
-                            <table class="table">
-
-                                <thead>
-
-                                    <tr>
-
-                                        <th>Finding</th>
-
-                                        <th>Asset</th>
-
-                                        <th>Severity</th>
-
-                                        <th>Status</th>
-
-                                    </tr>
-
-                                </thead>
-
-
-                                <tbody>
-
-                                    <tr>
-
-                                        <td>
-                                            Dataset Anomaly
-                                        </td>
-
-                                        <td>
-                                            Dataset_01
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-warning text-dark">
-                                                MEDIUM
-                                            </span>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-warning text-dark">
-                                                REVIEW
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                    <tr>
-
-                                        <td>
-                                            Model Verification
-                                        </td>
-
-                                        <td>
-                                            YOLO Model
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-success">
-                                                LOW
-                                            </span>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-success">
-                                                VERIFIED
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                    <tr>
-
-                                        <td>
-                                            Inference Modification
-                                        </td>
-
-                                        <td>
-                                            Inference_004
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-danger">
-                                                HIGH
-                                            </span>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-danger">
-                                                SUSPICIOUS
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- =========================
-                         ASSURANCE PIPELINE
-                    ========================== -->
-
-                    <div class="dashboard-section mt-4">
-
-                        <h5 class="fw-bold">
-                            Assurance Pipeline
-                        </h5>
-
-                        <p class="text-muted">
-                            Current status of the CV-TRUST assurance layers.
-                        </p>
-
-
-                        <div class="row g-3 mt-2">
-
-
-                            <div class="col-md-3">
-
-                                <div class="pipeline-card">
-
-                                    <h6>
-                                        Data
-                                    </h6>
-
-                                    <span class="badge bg-success">
-                                        VERIFIED
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-3">
-
-                                <div class="pipeline-card">
-
-                                    <h6>
-                                        Model
-                                    </h6>
-
-                                    <span class="badge bg-success">
-                                        VERIFIED
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-3">
-
-                                <div class="pipeline-card">
-
-                                    <h6>
-                                        Inference
-                                    </h6>
-
-                                    <span class="badge bg-warning text-dark">
-                                        REVIEW
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-3">
-
-                                <div class="pipeline-card">
-
-                                    <h6>
-                                        Shift
-                                    </h6>
-
-                                    <span class="badge bg-success">
-                                        NORMAL
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-    </body>
-
-</html>
-`;
+/* =========================================
+   CV-TRUST DASHBOARD
+   Fetches live data from GET /api/dashboard
+   Auto-refreshes every 30 seconds.
+   Nothing is hardcoded — all values from backend.
+========================================= */
+
+const API_BASE_URL = 'https://cv-trust-backend-oh3y.onrender.com';
+const REFRESH_INTERVAL_MS = 30000;
+
+// ── System status ─────────────────────────────────────────────────────────────
+const elSystemBadge     = document.getElementById('systemStatusBadge');
+const elBackendStatus   = document.getElementById('sysBackendStatus');
+const elMongoStatus     = document.getElementById('sysMongoStatus');
+const elPythonStatus    = document.getElementById('sysPythonStatus');
+
+// ── Summary cards ─────────────────────────────────────────────────────────────
+const elModelStatus       = document.getElementById('cardModelStatus');
+const elModelBadge        = document.getElementById('cardModelBadge');
+const elInferenceTotal    = document.getElementById('cardInferenceTotal');
+const elInferenceBadge    = document.getElementById('cardInferenceBadge');
+const elShiftScore        = document.getElementById('cardShiftScore');
+const elShiftBadge        = document.getElementById('cardShiftBadge');
+const elSystemStatus      = document.getElementById('cardSystemStatus');
+const elSystemStatusBadge = document.getElementById('cardSystemStatusBadge');
+
+// ── Model Assurance ───────────────────────────────────────────────────────────
+const elDashModelName     = document.getElementById('dashModelName');
+const elDashModelHash     = document.getElementById('dashModelHash');
+const elDashModelDevice   = document.getElementById('dashModelDevice');
+const elDashModelVerified = document.getElementById('dashModelVerifiedAt');
+const elDashModelVersion  = document.getElementById('dashModelVersion');
+
+// ── Inference Provenance ──────────────────────────────────────────────────────
+const elDashInfTotal      = document.getElementById('dashInfTotal');
+const elDashInfSuccess    = document.getElementById('dashInfSuccess');
+const elDashInfFailed     = document.getElementById('dashInfFailed');
+const elDashInfAvgTime    = document.getElementById('dashInfAvgTime');
+const elDashInfLastId     = document.getElementById('dashInfLastId');
+const elDashInfLastCount  = document.getElementById('dashInfLastCount');
+const elDashInfLastTime   = document.getElementById('dashInfLastTime');
+
+// ── Distribution Shift ────────────────────────────────────────────────────────
+const elDashShiftStatus   = document.getElementById('dashShiftStatus');
+const elDashShiftScore    = document.getElementById('dashShiftScore');
+const elDashShiftImage    = document.getElementById('dashShiftImage');
+const elDashShiftTime     = document.getElementById('dashShiftTime');
+
+// ── Pipeline cards ────────────────────────────────────────────────────────────
+const elPipelineModel     = document.getElementById('pipelineModel');
+const elPipelineInference = document.getElementById('pipelineInference');
+const elPipelineShift     = document.getElementById('pipelineShift');
+const elPipelineVision    = document.getElementById('pipelineVision');
+
+// ── Recent events ─────────────────────────────────────────────────────────────
+const elRecentEvents      = document.getElementById('recentEventsBody');
+
+// ── Last updated ──────────────────────────────────────────────────────────────
+const elLastUpdated       = document.getElementById('dashboardLastUpdated');
+
+// ── Fetch & render dashboard ──────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const resp   = await fetch(`${API_BASE_URL}/api/dashboard`);
+    const result = await resp.json();
+
+    if (!result.success) throw new Error('Dashboard API failed');
+
+    const d = result.data;
+    renderSystem(d.system);
+    renderModelAssurance(d.modelAssurance);
+    renderInference(d.inferenceProvenance);
+    renderShift(d.distributionShift);
+    renderEvents(d.recentEvents || []);
+    updateLastUpdated();
+
+  } catch (err) {
+    console.error('Dashboard load error:', err);
+    setSystemBadge('ERROR', 'bg-danger');
+  }
+}
+
+// ── Render system ─────────────────────────────────────────────────────────────
+function renderSystem(sys) {
+  if (!sys) return;
+
+  const overallOk = sys.status === 'OK';
+  if (elSystemBadge) {
+    elSystemBadge.textContent = overallOk ? 'System Healthy' : sys.status;
+    elSystemBadge.className   = overallOk ? 'badge bg-success p-2' : 'badge bg-warning text-dark p-2';
+  }
+
+  setText(elBackendStatus, statusDot(sys.backendStatus));
+  setText(elMongoStatus,   statusDot(sys.mongoStatus));
+  setText(elPythonStatus,  statusDot(sys.pythonStatus));
+
+  // System card
+  setText(elSystemStatus,      sys.status);
+  if (elSystemStatusBadge) {
+    elSystemStatusBadge.className = overallOk ? 'badge bg-success' : 'badge bg-warning text-dark';
+    elSystemStatusBadge.textContent = overallOk ? 'ONLINE' : 'PARTIAL';
+  }
+}
+
+function statusDot(status) {
+  return status === 'up' ? '✅ Online' : '❌ Offline';
+}
+
+// ── Render model assurance ────────────────────────────────────────────────────
+function renderModelAssurance(ma) {
+  if (!ma) return;
+
+  const available = ma.verificationStatus === 'AVAILABLE';
+  const unavailable = ma.verificationStatus === 'UNAVAILABLE';
+
+  // Summary card
+  setText(elModelStatus, ma.verificationStatus || '—');
+  if (elModelBadge) {
+    elModelBadge.textContent = ma.verificationStatus || 'UNKNOWN';
+    elModelBadge.className   = available ? 'badge bg-success' : unavailable ? 'badge bg-secondary' : 'badge bg-warning text-dark';
+  }
+
+  // Pipeline card
+  if (elPipelineModel) {
+    elPipelineModel.textContent  = ma.verificationStatus || 'UNKNOWN';
+    elPipelineModel.className    = available ? 'badge bg-success' : 'badge bg-secondary';
+  }
+
+  // Detail fields
+  setText(elDashModelName,     ma.modelName     || '—');
+  setText(elDashModelVersion,  ma.modelVersion  || '—');
+  setText(elDashModelDevice,   (ma.device || '—').toUpperCase());
+  setText(elDashModelVerified, ma.lastVerifiedAt ? new Date(ma.lastVerifiedAt).toLocaleString() : '—');
+
+  if (elDashModelHash) {
+    if (ma.modelHash && ma.modelHash.length === 64) {
+      elDashModelHash.textContent = ma.modelHash.substring(0, 20) + '…';
+      elDashModelHash.title       = ma.modelHash;
+    } else {
+      elDashModelHash.textContent = ma.modelHash || '—';
+    }
+  }
+}
+
+// ── Render inference provenance ───────────────────────────────────────────────
+function renderInference(inf) {
+  if (!inf) return;
+
+  // Summary card
+  setText(elInferenceTotal, inf.total ?? '—');
+  if (elInferenceBadge) {
+    const active = (inf.total || 0) > 0;
+    elInferenceBadge.textContent = active ? 'TRACKED' : 'NO DATA';
+    elInferenceBadge.className   = active ? 'badge bg-success' : 'badge bg-secondary';
+  }
+
+  // Pipeline card
+  if (elPipelineInference) {
+    elPipelineInference.textContent = (inf.total || 0) > 0 ? 'TRACKED' : 'NO DATA';
+    elPipelineInference.className   = (inf.total || 0) > 0 ? 'badge bg-success' : 'badge bg-secondary';
+  }
+
+  // Detail fields
+  setText(elDashInfTotal,     inf.total       ?? '—');
+  setText(elDashInfSuccess,   inf.successful  ?? '—');
+  setText(elDashInfFailed,    inf.failed      ?? '—');
+  setText(elDashInfAvgTime,   inf.avgProcessingTimeMs != null
+    ? (inf.avgProcessingTimeMs / 1000).toFixed(1) + ' s' : '—');
+  setText(elDashInfLastId,    inf.lastInferenceId   || '—');
+  setText(elDashInfLastCount, inf.lastObjectCount   ?? '—');
+  setText(elDashInfLastTime,  inf.lastInferenceTime
+    ? new Date(inf.lastInferenceTime).toLocaleString() : '—');
+}
+
+// ── Render distribution shift ─────────────────────────────────────────────────
+function renderShift(shift) {
+  if (!shift) return;
+
+  const status = shift.shiftStatus;
+  const pct    = shift.shiftScore != null ? Math.round(shift.shiftScore * 100) + '%' : '—';
+
+  // Summary card
+  setText(elShiftScore, pct);
+  if (elShiftBadge) {
+    elShiftBadge.textContent = status || 'NO DATA';
+    elShiftBadge.className   = shiftBadgeClass(status);
+  }
+
+  // Pipeline card
+  if (elPipelineShift) {
+    elPipelineShift.textContent = status || 'NO DATA';
+    elPipelineShift.className   = shiftBadgeClass(status);
+  }
+
+  // Detail fields
+  setText(elDashShiftStatus, status || '—');
+  setText(elDashShiftScore,  pct);
+  setText(elDashShiftImage,  shift.lastAnalysedImage || '—');
+  setText(elDashShiftTime,   shift.lastAnalysedAt
+    ? new Date(shift.lastAnalysedAt).toLocaleString() : '—');
+
+  // Vision pipeline (YOLO active if inference count > 0)
+  if (elPipelineVision) {
+    elPipelineVision.textContent = 'ACTIVE';
+    elPipelineVision.className   = 'badge bg-success';
+  }
+}
+
+function shiftBadgeClass(status) {
+  if (status === 'NORMAL')   return 'badge bg-success';
+  if (status === 'MODERATE') return 'badge bg-warning text-dark';
+  if (status === 'HIGH')     return 'badge bg-danger';
+  return 'badge bg-secondary';
+}
+
+// ── Render recent audit events ────────────────────────────────────────────────
+function renderEvents(events) {
+  if (!elRecentEvents) return;
+
+  // Remove existing generated rows
+  elRecentEvents.querySelectorAll('tr.event-row').forEach((r) => r.remove());
+
+  if (events.length === 0) {
+    const row = document.createElement('tr');
+    row.classList.add('event-row');
+    row.innerHTML = '<td colspan="4" class="text-muted text-center">No audit events yet.</td>';
+    elRecentEvents.appendChild(row);
+    return;
+  }
+
+  events.forEach((ev) => {
+    const row = document.createElement('tr');
+    row.classList.add('event-row');
+    row.innerHTML = `
+      <td>${escapeHtml(ev.action || '—')}</td>
+      <td>${escapeHtml(ev.relatedType || '—')}</td>
+      <td><span class="badge ${ev.result === 'SUCCESS' ? 'bg-success' : 'bg-danger'}">${ev.result || '—'}</span></td>
+      <td>${ev.createdAt ? new Date(ev.createdAt).toLocaleString() : '—'}</td>
+    `;
+    elRecentEvents.appendChild(row);
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function setText(el, value) { if (el) el.textContent = value; }
+
+function setSystemBadge(text, cls) {
+  if (elSystemBadge) {
+    elSystemBadge.textContent = text;
+    elSystemBadge.className   = `badge ${cls} p-2`;
+  }
+}
+
+function updateLastUpdated() {
+  if (elLastUpdated) {
+    elLastUpdated.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Init + auto-refresh ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadDashboard();
+  setInterval(loadDashboard, REFRESH_INTERVAL_MS);
+});
