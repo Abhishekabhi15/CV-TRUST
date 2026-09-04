@@ -108,7 +108,20 @@ detectBtn.addEventListener("click", async function () {
         "ANALYZING";
 
     resultStatus.textContent =
-        "Processing image...";
+        "Processing image… This may take 30–90 seconds on first run.";
+
+    // Display a warming-up note in results area
+    detectionResults.innerHTML = `
+        <div class="text-muted small">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Running YOLO detection. If the service is waking up from idle,
+            this can take up to 90 seconds — please wait.
+        </div>
+    `;
+
+    // 120-second browser-side timeout (Render cold start can take 60-90s)
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 120000);
 
     try {
 
@@ -120,16 +133,21 @@ detectBtn.addEventListener("click", async function () {
             `${API_BASE_URL}/api/detect`,
             {
                 method: "POST",
-                body: formData
+                body:   formData,
+                signal: controller.signal
             }
         );
+
+        clearTimeout(timeoutId);
 
         const result = await response.json();
 
         if (!response.ok || !result.success) {
             let errorMessage = "Detection failed.";
 
-            if (result.message) {
+            if (result.error && result.error.message) {
+                errorMessage = result.error.message;
+            } else if (result.message) {
                 errorMessage = result.message;
             } else if (typeof result.error === "string") {
                 errorMessage = result.error;
@@ -137,7 +155,7 @@ detectBtn.addEventListener("click", async function () {
                 errorMessage = JSON.stringify(result.error, null, 2);
             }
 
-throw new Error(errorMessage);
+            throw new Error(errorMessage);
         }
 
         /*
@@ -174,6 +192,8 @@ throw new Error(errorMessage);
 
     } catch (error) {
 
+        clearTimeout(timeoutId);
+
         console.error("YOLO detection error:", error);
 
         detectionStatus.className =
@@ -185,18 +205,25 @@ throw new Error(errorMessage);
         resultStatus.textContent =
             "Detection failed";
 
+        // Friendlier messages for common error types
+        let userMessage = error.message;
+        if (error.name === "AbortError") {
+            userMessage = "Request timed out after 120 seconds. The YOLO service may still be starting up. Please wait 30 seconds and try again.";
+        } else if (userMessage && userMessage.toLowerCase().includes("unavailable")) {
+            userMessage = "YOLO service is temporarily unavailable. It may be starting up — please wait 30–60 seconds and try again.";
+        } else if (userMessage && userMessage.toLowerCase().includes("timed out")) {
+            userMessage = "YOLO service timed out. The service is on a free-tier server — the first request after idle takes longer. Please try again.";
+        }
+
         detectionResults.innerHTML = `
-            <div class="text-danger">
+            <div class="alert alert-danger">
                 <strong>Detection failed</strong>
                 <br>
-                <small>${escapeHtml(error.message)}</small>
+                <small>${escapeHtml(userMessage)}</small>
+                <br><br>
+                <small class="text-muted">If this is the first detection in a while, the service may be cold-starting. Wait 60 seconds and try again.</small>
             </div>
         `;
-
-        alert(
-    "YOLO detection failed.\n\n" +
-    error.message
-);
 
     } finally {
 
